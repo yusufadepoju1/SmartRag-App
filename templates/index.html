@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI School Manager</title>
+    <meta name="description" content="AI-powered school document management system" />
+    <meta name="author" content="Lovable" />
+    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
+    <style>/* Base styles */
+      :root {
+        --primary: #1e53e5;
+        --primary-dark: #15c04e;
+        --primary-light: #bbdefb;
+        --secondary: #ffffff;
+        --background: #f5f7fa;
+        --text: #333333;
+        --text-light: #666666;
+        --border: #e0e0e0;
+        --success: #4caf50;
+        --error: #f44336;
+        --warning: #ff9800;
+        --radius: 8px;
+        --shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      }
+      
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        line-height: 1.6;
+        color: var(--text);
+        background-color: var(--background);
+      }
+      
+      .container {
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1rem;
+      }
+      
+      /* Typography */
+      h1, h2, h3, h4, h5, h6 {
+        font-weight: 600;
+        line-height: 1.3;
+        margin-bottom: 1rem;
+        color: var(--text);
+      }
+      
+      p {
+        margin-bottom: 1rem;
+      }
+      
+      a {
+        color: var(--primary);
+        text-decoration: none;
+      }
+      
+      a:hover {
+        text-decoration: underline;
+      }
+      
+      .link-primary {
+        color: var(--primary);
+        font-weight: 500;
+      }
+      
+      /* Header and Navigation */
+      header {
+        background-color: white;
+        box-shadow: var(--shadow);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+      
+      header .container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem;
+      }
+      
+      .logo {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin: 0;
+      }
+      
+      nav ul {
+        display: flex;
+        list-style: none;
+        gap: 1rem;
+      }
+      
+      nav a {
+        padding: 0.5rem 1rem;
+        color: var(--text);
+        font-weight: 500;
+        border-radius: var(--radius);
+      }
+      
+      nav a:hover {
+        background-color: var(--primary-light);
+        text-decoration: none;
+      }
+      
+      nav a.active {
+        background-color: var(--primary);
+        color: white;
+      }
+      
+      /* Buttons */
+      .btn {
+        display: inline-block;
+        background-color: var(--secondary);
+        color: var(--text);
+        border: 1px solid var(--border);
+        padding: 0.75rem 1.5rem;
+        border-radius: var(--radius);
+        font-weight: 500;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-align: center;
+      }
+      
+      .btn:hover {
+        text-decoration: none;
+        transform: translateY(-1px);
+      }
+      
+      .btn-primary {
+        background-color: var(--primary);
+        color: white;
+        border: none;
+      }
+      
+      .btn-primary:hover {
+        background-color: var(--primary-dark);
+      }
+      
+      .btn-secondary {
+        background-color: white;
+        color: var(--primary);
+        border: none;
+      }
+      
+      .btn-outline {
+        background-color: transparent;
+        border: 1px solid var(--primary);
+        color: var(--primary);
+      }
+      
+      .btn-outline:hover {
+        background-color: var(--primary-light);
+      }
+      
+      button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+      
+      /* Forms */
+      input, textarea {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        font-size: 1rem;
+        transition: border-color 0.2s ease;
+      }
+      
+      input:focus, textarea:focus {
+        outline: none;
+        border-color: var(--primary);
+      }
+      
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+      
+      label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+      }
+      
+      .input-with-button {
+        display: flex;
+      }
+      
+      .input-with-button input {
+        flex: 1;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+      
+      .input-with-button button {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+        padding: 0 1rem;
+        background-color: var(--primary);
+        color: white;
+        border: none;
+      }
+      
+      .input-hint {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.75rem;
+        color: var(--text-light);
+        margin-top: 0.5rem;
+      }
+      
+      .form-divider {
+        height: 1px;
+        background-color: var(--border);
+        margin: 2rem 0;
+      }
+      
+      .form-actions {
+        display: flex;
+        justify-content: flex-start;
+        margin-top: 1.5rem;
+      }
+      
+      /* Page Layout */
+      main {
+        min-height: calc(100vh - 140px);
+      }
+      
+      .page-header {
+        background-color: var(--primary-light);
+        padding: 2rem 0;
+        margin-bottom: 2rem;
+      }
+      
+      .page-header h1 {
+        margin-bottom: 0.5rem;
+      }
+      
+      .content {
+        padding: 1rem 0 3rem 0;
+      }
+      
+      /* Home page */
+      .hero {
+        background: linear-gradient(to right, var(--primary), var(--primary-dark));
+        color: white;
+        padding: 4rem 0;
+        text-align: center;
+      }
+      
+      .hero h1 {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        color: white;
+      }
+      
+      .hero p {
+        font-size: 1.25rem;
+        margin-bottom: 2rem;
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      
+      .hero-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      
+      .features {
+        padding: 4rem 0;
+      }
+      
+      .features h2 {
+        text-align: center;
+        margin-bottom: 3rem;
+        font-size: 2rem;
+      }
+      
+      .feature-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+      }
+      
+      .card {
+        background-color: white;
+        border-radius: var(--radius);
+        padding: 2rem;
+        box-shadow: var(--shadow);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+      
+      .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      }
+      
+      .card-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        background-color: var(--primary-light);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1.5rem;
+        color: var(--primary);
+      }
+      
+      .card h3 {
+        margin-bottom: 1rem;
+      }
+      
+      .card-link {
+        display: inline-block;
+        margin-top: 1rem;
+        font-weight: 500;
+      }
+      
+      .cta {
+        background-color: var(--primary);
+        color: white;
+        padding: 4rem 0;
+        text-align: center;
+      }
+      
+      .cta h2 {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        color: white;
+      }
+      
+      .cta p {
+        font-size: 1.25rem;
+        margin-bottom: 2rem;
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      
+      /* Chat page */
+      .chat-layout {
+        display: grid;
+        grid-template-columns: 300px 1fr;
+        gap: 2rem;
+        align-items: start;
+      }
+      
+      .chat-sidebar {
+        background-color: white;
+        border-radius: var(--radius);
+        padding: 1.5rem;
+        box-shadow: var(--shadow);
+      }
+      
+      .sidebar-section h3 {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+      }
+      
+      .sidebar-hint {
+        font-size: 0.875rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+      }
+      
+      .suggested-questions {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      
+      .question-button {
+        background-color: transparent;
+        border: 1px solid var(--border);
+        padding: 0.75rem 1rem;
+        border-radius: var(--radius);
+        text-align: left;
+        font-size: 0.875rem;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+      }
+      
+      .question-button:hover {
+        background-color: var(--primary-light);
+      }
+      
+      .sidebar-divider {
+        height: 1px;
+        background-color: var(--border);
+        margin: 1.5rem 0;
+      }
+      
+      .no-documents {
+        background-color: var(--background);
+        padding: 1rem;
+        border-radius: var(--radius);
+        font-size: 0.875rem;
+      }
+      
+      .chat-container {
+        display: flex;
+        flex-direction: column;
+        height: 600px;
+        background-color: white;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+      
+      .messages {
+        flex: 1;
+        overflow-y: auto;
+        padding: 1.5rem;
+      }
+      
+      .message {
+        margin-bottom: 1.5rem;
+        max-width: 80%;
+      }
+      
+      .message.user {
+        margin-left: auto;
+        background-color: var(--primary);
+        color: white;
+        border-radius: 1rem 1rem 0 1rem;
+        padding: 1rem;
+      }
+      
+      .message.ai {
+        margin-right: auto;
+        background-color: var(--background);
+        border-radius: 1rem 1rem 1rem 0;
+        padding: 1rem;
+      }
+      
+      .message-sender {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+      }
+      
+      .message-time {
+        font-size: 0.75rem;
+        opacity: 0.7;
+        text-align: right;
+        margin-top: 0.5rem;
+      }
+      
+      .chat-input-container {
+        border-top: 1px solid var(--border);
+        padding: 1rem;
+      }
+      
+      /* Upload page */
+      .upload-container {
+        background-color: white;
+        border-radius: var(--radius);
+        padding: 2rem;
+        box-shadow: var(--shadow);
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      
+      .drop-zone {
+        border: 2px dashed var(--border);
+        border-radius: var(--radius);
+        padding: 3rem 2rem;
+        text-align: center;
+        transition: border-color 0.2s ease, background-color 0.2s ease;
+        cursor: pointer;
+      }
+      
+      .drop-zone:hover, .drop-zone.active {
+        border-color: var(--primary);
+        background-color: var(--primary-light);
+      }
+      
+      .drop-zone svg {
+        color: var(--text-light);
+        margin-bottom: 1rem;
+      }
+      
+      .drop-zone h3 {
+        margin-bottom: 0.5rem;
+      }
+      
+      .drop-zone p {
+        color: var(--text-light);
+        margin-bottom: 1.5rem;
+      }
+      
+      .file-list-container {
+        margin-top: 2rem;
+      }
+      
+      .file-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+      
+      .file-item {
+        background-color: var(--background);
+        border-radius: var(--radius);
+        padding: 1rem;
+        display: flex;
+        align-items: center;
+      }
+      
+      .file-icon {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1rem;
+      }
+      
+      .file-details {
+        flex: 1;
+      }
+      
+      .file-name {
+        font-weight: 500;
+        margin-bottom: 0.25rem;
+      }
+      
+      .file-meta {
+        display: flex;
+        gap: 1rem;
+        font-size: 0.75rem;
+        color: var(--text-light);
+      }
+      
+      .file-progress {
+        margin-top: 0.5rem;
+      }
+      
+      .progress-bar {
+        height: 6px;
+        background-color: var(--border);
+        border-radius: 3px;
+        overflow: hidden;
+      }
+      
+      .progress-fill {
+        height: 100%;
+        background-color: var(--primary);
+        width: 0%;
+        transition: width 0.3s ease;
+      }
+      
+      .file-status {
+        font-size: 0.75rem;
+        margin-top: 0.25rem;
+      }
+      
+      .file-status.uploading {
+        color: var(--text-light);
+      }
+      
+      .file-status.success {
+        color: var(--success);
+      }
+      
+      .file-status.error {
+        color: var(--error);
+      }
+      
+      .file-actions {
+        display: flex;
+        gap: 0.5rem;
+      }
+      
+      .file-action-button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--text-light);
+        padding: 0.25rem;
+      }
+      
+      .file-action-button:hover {
+        color: var(--text);
+      }
+      
+      /* Documents page */
+      .documents-container {
+        background-color: white;
+        border-radius: var(--radius);
+        padding: 1.5rem;
+        box-shadow: var(--shadow);
+      }
+      
+      .documents-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+      
+      .search-container {
+        position: relative;
+        flex: 1;
+        max-width: 400px;
+      }
+      
+      .search-container input {
+        padding-left: 2.5rem;
+      }
+      
+      .search-container svg {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-light);
+      }
+      
+      .documents-table-container {
+        overflow-x: auto;
+      }
+      
+      .documents-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      
+      .documents-table th, .documents-table td {
+        padding: 1rem;
+        text-align: left;
+        border-bottom: 1px solid var(--border);
+      }
+      
+      .documents-table th {
+        font-weight: 600;
+        color: var(--text-light);
+      }
+      
+      .document-name {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+      
+      .document-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      .document-actions {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: flex-end;
+      }
+      
+      .action-button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-light);
+        transition: background-color 0.2s ease, color 0.2s ease;
+      }
+      
+      .action-button:hover {
+        background-color: var(--primary-light);
+        color: var(--primary);
+      }
+      
+      .action-button.delete:hover {
+        background-color: rgba(244, 67, 54, 0.1);
+        color: var(--error);
+      }
+      
+      .empty-state {
+        text-align: center;
+        padding: 3rem 1rem;
+      }
+      
+      .empty-state svg {
+        color: var(--text-light);
+        margin-bottom: 1.5rem;
+      }
+      
+      .empty-state h3 {
+        margin-bottom: 0.5rem;
+      }
+      
+      .empty-state p {
+        color: var(--text-light);
+        margin-bottom: 1.5rem;
+      }
+      
+      /* Footer */
+      footer {
+        background-color: white;
+        border-top: 1px solid var(--border);
+        padding: 1.5rem 0;
+        text-align: center;
+        font-size: 0.875rem;
+        color: var(--text-light);
+      }
+      
+      /* Responsive styles */
+      @media (max-width: 768px) {
+        .chat-layout {
+          grid-template-columns: 1fr;
+        }
+        
+        .chat-sidebar {
+          margin-bottom: 1.5rem;
+        }
+        
+        .hero h1 {
+          font-size: 2.5rem;
+        }
+        
+        .hide-mobile {
+          display: none;
+        }
+        
+        .documents-header {
+          flex-direction: column;
+          align-items: stretch;
+        }
+        
+        .search-container {
+          max-width: none;
+        }
+      }
+      </style>
+  </head>
+
+  <body>
+    <header>
+      <div class="container">
+        <h1 class="logo">SmartRag App</h1>
+        <nav>
+          <ul>
+            <li><a href="/index" class="active">Home</a></li>
+            <li><a href="/ask">Ask AI</a></li>
+            <li><a href="/upload">Upload</a></li>
+            <li><a href="/documents">Documents</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="container">
+          <div class="hero-content">
+            <h1>SmartRag App</h1>
+            <p>Your intelligent assistant for managing documents and answering questions.</p>
+            <div class="hero-buttons">
+              <a href="/ask" class="btn btn-primary">Ask AI Assistant</a>
+              <a href="/upload" class="btn btn-outline">Upload Documents</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="features">
+        <div class="container">
+          <h2>Features</h2>
+          <div class="feature-cards">
+            <div class="card">
+              <div class="card-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="message-square">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+              </div>
+              <h3>Ask AI</h3>
+              <p>Ask questions and get intelligent answers powered by our AI assistant</p>
+              <a href="/ask_page" class="card-link">Try it now</a>
+            </div>
+            <div class="card">
+              <div class="card-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="upload">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="17 8 12 3 7 8"></polyline>
+                  <line x1="12" y1="3" x2="12" y2="15"></line>
+                </svg>
+              </div>
+              <h3>Upload Documents</h3>
+              <p>Upload school documents and resources for AI-powered access</p>
+              <a href="/upload" class="card-link">Upload now</a>
+            </div>
+            <div class="card">
+              <div class="card-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="file-text">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                  <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+              </div>
+              <h3>Manage Documents</h3>
+              <p>View, download, and organize all your uploaded documents</p>
+              <a href="/document" class="card-link">View documents</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="cta">
+        <div class="container">
+          <h2>Ready to get started?</h2>
+          <p>Explore our AI-powered tools and document management solutions.</p>
+          <a href="/ask" class="btn btn-secondary">Try the AI Assistant</a>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="container">
+        <p>&copy; 2025 Yusuf Adepoju SmartRag App. All rights reserved.</p>
+      </div>
+    </footer>
+
+  
+  </body>
+</html>
